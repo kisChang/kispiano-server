@@ -7,8 +7,12 @@
     <groupId>org.example</groupId>
     <artifactId>kispiano-server</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
-    <name>kpser</name>
+    <modules>
+        <module>kispiano-server-util</module>
+        <module>kispiano-server-front</module>
+        <module>kispiano-server-admin</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
@@ -17,7 +21,8 @@
         <kis.version>0.3.31-SNAPSHOT</kis.version>
 
         <!--配置参数-->
-        <conf.port>8080</conf.port>
+        <conf.front.port>8080</conf.front.port>
+        <conf.admin.port>8081</conf.admin.port>
         <conf.db.database>kispiano</conf.db.database>
         <conf.db.username>careerlab</conf.db.username>
         <conf.db.password>tbceo</conf.db.password>
@@ -32,7 +37,6 @@
         <profile>
             <id>aliyun</id>
             <properties>
-                <conf.port>8021</conf.port>
                 <conf.db.database>kispiano</conf.db.database>
                 <conf.db.username>root</conf.db.username>
                 <conf.db.password>root</conf.db.password>
@@ -57,45 +61,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.2</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!--jpa-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql-connector.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kischang</groupId>
-            <artifactId>kis-utils</artifactId>
-            <version>${kis.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.14</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
         </dependency>
     </dependencies>
 

@@ -1,4 +1,4 @@
-package io.kischang.kispiano;
+package io.kischang.kispiano.front;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2020-06-30
  */
 @SpringBootApplication
-public class MainApplication {
+public class FrontMainApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MainApplication.class, args);
+        SpringApplication.run(FrontMainApplication.class, args);
     }
 
 }
