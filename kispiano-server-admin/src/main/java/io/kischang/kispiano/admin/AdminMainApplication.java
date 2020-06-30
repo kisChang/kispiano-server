@@ -1,4 +1,4 @@
-package io.kischang.kispiano.front;
+package io.kischang.kispiano.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +14,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan("io.kischang.kispiano")
 @EntityScan("io.kischang.kispiano")
 @EnableJpaRepositories("io.kischang.kispiano")
-public class FrontMainApplication {
+public class AdminMainApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FrontMainApplication.class, args);
+        SpringApplication.run(AdminMainApplication.class, args);
     }
 
 }
