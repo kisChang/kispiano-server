@@ -7,18 +7,19 @@ import lombok.Getter;
 
 /**
  * @author KisChang
- * @date 2020-06-30
+ * @date 2020-07-01
  */
 @Getter
 @AllArgsConstructor
-public enum FileTypeEnum implements BaseValEnum {
+public enum AuditState implements BaseValEnum {
 
-    LOCAL(1, "本地"),
-    //FastDFS(2, "FastDFS"),
+    Wait(0, "待审核"),
+    Pass(1, "审核通过"),
+    NoPass(2, "审核驳回"),
     ;
 
     @JsonValue
-    private int value;
-    private String desc;
+    private final int value;
+    private final String name;
 
 }

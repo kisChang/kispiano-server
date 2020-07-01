@@ -58,6 +58,13 @@
                 {field: 'mainPic',  title: '主图'},
                 {field: 'lastUpdate',  title: '修改时间', sort: true},
                 {field: 'score',  title: '评分', sort: true},
+                {field: 'auditState',  title: '审核', sort: true, templet: function(d){
+                        switch (d.auditState) {
+                            case 0: return '待审核';case 1: return '审核通过';
+                            case 2:default:
+                                return '<span style="color: #c00;">驳回</span>';
+                        }
+                    }},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
         });

@@ -1,6 +1,7 @@
 package io.kischang.kispiano.admin.service.impl;
 
 import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
+import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.enums.FileTypeEnum;
 import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
@@ -60,6 +61,8 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
         desc.setMainPic(picName);
         desc.setSavePath(xmlName);
         desc.setFileType(FileTypeEnum.LOCAL);
+
+        desc.setAuditState(AuditState.Wait);
         desc = dao.save(desc);
 
         return desc;
@@ -73,6 +76,7 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
             old.setName(desc.getName());
             old.setDescText(desc.getDescText());
             old.setScore(desc.getScore());
+            old.setAuditState(desc.getAuditState());
 
             old.setLastUpdate(DateFormatUtils.formatDatetime());
             return dao.save(old);

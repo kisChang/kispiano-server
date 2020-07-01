@@ -1,13 +1,18 @@
 package io.kischang.kispiano.model;
 
 import com.kischang.simple_utils.hibernate.ig.HibUUIDGenerator;
+import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.enums.FileTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * MusicXml档案库
@@ -38,8 +43,10 @@ public class MusicXmlArchive implements java.io.Serializable {
     //评分信息（0-100，按 /10 显示）
     private int score;
 
+    @ColumnDefault("0")
+    private AuditState auditState = AuditState.Wait;
     //存储信息
-    private FileTypeEnum fileType;
+    private FileTypeEnum fileType = FileTypeEnum.LOCAL;
     //0 DB base64
     //1 Local 本地访问地址
     private String savePath;

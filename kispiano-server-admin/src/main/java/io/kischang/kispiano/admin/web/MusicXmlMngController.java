@@ -9,6 +9,7 @@ import com.kischang.simple_utils.utils.JacksonUtils;
 import com.kischang.simple_utils.web.bind.annotation.ReqDataTablePage;
 import io.kischang.kispiano.admin.formbean.LayuiTableRv;
 import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
+import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
 import io.kischang.kispiano.utils.DateFormatUtils;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -78,6 +80,7 @@ public class MusicXmlMngController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editView(String id, Model model) {
         model.addAttribute("model", archiveDao.findById(id));
+        model.addAttribute("auditStateList", AuditState.values());
         return "mng/music/edit";
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
