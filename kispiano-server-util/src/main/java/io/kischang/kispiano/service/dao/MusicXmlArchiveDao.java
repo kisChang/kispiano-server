@@ -14,6 +14,8 @@ public interface MusicXmlArchiveDao extends PagingAndSortingRepository<MusicXmlA
 
     Page<MusicXmlArchive> findAllByNameContains(String nameKey, Pageable page);
 
-    Page<MusicXmlArchive> findAllByNameContainsAndAndAuditStateEqualsOrderByScoreDesc(String nameKey, AuditState state, Pageable page);
+    Page<MusicXmlArchive> findAllByNameContainsAndAuditStateEqualsOrderByScoreDesc(String nameKey, AuditState state, Pageable page);
+
+    Page<MusicXmlArchive> findAllByAuditStateEqualsOrderByScoreDesc(AuditState state, Pageable page);
 
 }

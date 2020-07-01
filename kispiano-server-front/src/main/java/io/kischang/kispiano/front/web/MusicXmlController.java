@@ -6,10 +6,12 @@ import com.kischang.simple_utils.web.bind.annotation.ReqPageInfo;
 import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
+import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,22 +22,27 @@ import javax.annotation.Resource;
  * @date 2020-06-30
  */
 @Controller
-@RequestMapping("/musicxml")
+@RequestMapping("/api/front/musicxml")
 public class MusicXmlController {
 
     @Resource
     private MusicXmlArchiveDao archiveDao;
 
+    @Data
+    public static class SearchPage implements java.io.Serializable {
+        private String name;
+        private int page;
+    }
     @RequestMapping("/search")
     @ResponseBody
-    public Page<?> searchByName(String name, int page){
-        return archiveDao.findAllByNameContainsAndAndAuditStateEqualsOrderByScoreDesc(
-                name, AuditState.Pass, PageRequest.of(page, 10));
-    }
-
-    @RequestMapping("/{id}/music.xml")
-    public String getMusicXmlById(@PathVariable long id){
-        return null;
+    public Page<?> searchByName(@RequestBody SearchPage searchPage) {
+        if (searchPage.name != null){
+            return archiveDao.findAllByNameContainsAndAuditStateEqualsOrderByScoreDesc(
+                    searchPage.name, AuditState.Pass, PageRequest.of(searchPage.page, 10));
+        }else {
+            return archiveDao.findAllByAuditStateEqualsOrderByScoreDesc(
+                     AuditState.Pass, PageRequest.of(searchPage.page, 10));
+        }
     }
 
 }

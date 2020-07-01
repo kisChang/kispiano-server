@@ -108,11 +108,12 @@
                 return false;
             } else if (obj.event === 'delete') {
                 layer.confirm('确认删除？', function (index) {
-                    layer.close();
+                    layer.close(index);
                     $.post(APP_BASE + "/musicxml/delete", {id : obj.data.id}, function (rv) {
                         if (rv && rv.stat){
                             var iframeIndex = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(iframeIndex);
+                            table.reload()
                         }else {
                             layer.alert(data.msg);
                         }
