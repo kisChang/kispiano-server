@@ -13,11 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -41,31 +44,40 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
     public MusicXmlArchive saveWithFile(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException {
         //预存储
         desc = dao.save(desc);
+        String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
         //处理图片
         String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
                 .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
         String picName = desc.getId() + picType;
-        Path picSp = Paths.get(picSavePath, picName);
+        Path picSp = Paths.get(picSavePath, preffix, picName);
+        checkPath(picSp.toFile().getParentFile());
         try (OutputStream out = new FileOutputStream(picSp.toFile())) {
             IOUtils.write(mainPicFile.getBytes(), out);
         }
         //处理文件
         String xmlName = desc.getId() + ".xml";
-        Path xmlSp = Paths.get(xmlSavePath, xmlName);
+        Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
+        checkPath(xmlSp.toFile().getParentFile());
         try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
             IOUtils.write(xmlFile.getBytes(), out);
         }
 
         //更新
         desc.setLastUpdate(DateFormatUtils.formatDatetime());
-        desc.setMainPic(picName);
-        desc.setSavePath(xmlName);
+        desc.setMainPic(preffix + "/" + picName);
+        desc.setSavePath(preffix + "/" + xmlName);
         desc.setFileType(FileTypeEnum.LOCAL);
 
         desc.setAuditState(AuditState.Wait);
         desc = dao.save(desc);
 
         return desc;
+    }
+
+    private void checkPath(File pathFile) {
+        if (!pathFile.exists()){
+            pathFile.mkdirs();
+        }
     }
 
     @Override
