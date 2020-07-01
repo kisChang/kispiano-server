@@ -30,14 +30,18 @@ public class MusicXmlArchive implements java.io.Serializable {
 
     //基础描述信息
     private String name;
+    //存储访问路径
     private String mainPic;
     private String descText;
     private String lastUpdate;
+
     //评分信息（0-100，按 /10 显示）
     private int score;
 
     //存储信息
     private FileTypeEnum fileType;
+    //0 DB base64
+    //1 Local 本地访问地址
     private String savePath;
 
 }

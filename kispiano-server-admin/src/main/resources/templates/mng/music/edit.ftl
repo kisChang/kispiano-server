@@ -20,7 +20,19 @@
         <div class="layui-form-item">
             <label class="layui-form-label">主图</label>
             <div class="layui-input-block">
-                <input type="text" name="mainPic" placeholder="主图" value="${model.get().mainPic!}" class="layui-input" autocomplete="off">
+                <input type="text" value="${model.get().mainPic!}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主文件</label>
+            <div class="layui-input-block">
+                <input type="text" value="${model.get().savePath!}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">评分</label>
+            <div class="layui-input-block">
+                <input type="number" name="score" value="${model.get().score!}" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">

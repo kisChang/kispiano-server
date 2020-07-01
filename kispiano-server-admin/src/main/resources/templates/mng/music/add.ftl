@@ -2,29 +2,37 @@
 <html>
 <head>
     <title>layui</title>
-    <#import "/common/common.macro.ftl" as netCommon>
-    <@netCommon.commonStyle />
+    <#import "*/common/common.macro.ftl" as lib>
+    <@lib.commonStyle />
 </head>
 <body>
 <div class="layui-form layuimini-form">
-    <div class="layui-form-item">
-        <label class="layui-form-label required">名称</label>
-        <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
+    <form id="form" onsubmit="return false;">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">主图</label>
-        <div class="layui-input-block">
-            <input type="text" name="mainPic" placeholder="主图" value="" class="layui-input">
+        <div class="layui-form-item">
+            <label class="layui-form-label">主图</label>
+            <div class="layui-input-block">
+                <input type="file" name="mainPicFile" placeholder="主图" class="layui-input">
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">描述信息</label>
-        <div class="layui-input-block">
-            <textarea name="descText" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主文件</label>
+            <div class="layui-input-block">
+                <input type="file" name="xmlFile" placeholder="主文件" class="layui-input">
+            </div>
         </div>
-    </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述信息</label>
+            <div class="layui-input-block">
+                <textarea name="descText" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+            </div>
+        </div>
+    </form>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
@@ -32,24 +40,27 @@
         </div>
     </div>
 </div>
-<@netCommon.commonScript />
+<@lib.commonScript />
 <script>
     layui.use(['form'], function () {
         var form = layui.form, layer = layui.layer, $ = layui.$;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            $.post(location.href, data.field, function (rv) {
+            $.ajax({
+                url: location.href, type: 'POST', cache: false,
+                data: new FormData(document.getElementById('form')),
+                processData: false, contentType: false,
+            }).done(function(rv) {
                 if (rv && rv.stat){
                     var iframeIndex = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(iframeIndex);
                 }else {
                     layer.alert(data.msg);
                 }
-            }).error(function () {
+            }).fail(function(res) {
                 layer.alert("连接服务器失败！")
-            })
-
+            });
             return false;
         });
 
