@@ -15,6 +15,8 @@
         </div>
     </div>
 </@curd.table>
+
+<@netCommon.commonScript />
 <script>
     cols_def = [[
         {field: 'id',  title: 'ID'},
