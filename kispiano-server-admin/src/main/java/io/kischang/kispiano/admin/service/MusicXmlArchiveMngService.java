@@ -1,6 +1,7 @@
 package io.kischang.kispiano.admin.service;
 
 import io.kischang.kispiano.model.MusicXmlArchive;
+import io.kischang.kispiano.model.XmlSet;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,4 +15,9 @@ public interface MusicXmlArchiveMngService {
     MusicXmlArchive saveWithFile(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException;
 
     MusicXmlArchive updateInfo(MusicXmlArchive desc);
+
+    XmlSet saveSetWithFile(XmlSet desc, MultipartFile mainPicFile) throws IOException;
+
+    XmlSet updateSetInfo(XmlSet desc);
+
 }

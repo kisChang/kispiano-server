@@ -43,6 +43,7 @@ public class IndexController {
             List<LayuiMenuInfo> menuInfo = new LinkedList<>();
             initConfig.setMenuInfo(menuInfo);
             menuInfo.add(LayuiMenuInfo.mkMenu("资源管理", "fa fa-address-book", "/musicxml"));
+            menuInfo.add(LayuiMenuInfo.mkMenu("集合管理", "fa fa-address-book", "/xmlset"));
             //本地缓存
             //menuConf = initConfig;
             return initConfig;

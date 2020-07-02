@@ -5,9 +5,8 @@ import com.kischang.simple_utils.formbean.ResponseData;
 import com.kischang.simple_utils.utils.JacksonUtils;
 import io.kischang.kispiano.admin.formbean.LayuiTableRv;
 import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
-import io.kischang.kispiano.enums.AuditState;
-import io.kischang.kispiano.model.MusicXmlArchive;
-import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
+import io.kischang.kispiano.model.XmlSet;
+import io.kischang.kispiano.service.dao.XmlSetDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -26,41 +25,41 @@ import java.io.IOException;
  * @date 2020-06-30
  */
 @Controller
-@RequestMapping("/musicxml")
-public class MusicXmlMngController {
+@RequestMapping("/xmlset")
+public class XmlSetMngController {
 
     @Resource
-    private MusicXmlArchiveDao archiveDao;
+    private XmlSetDao xmlSetDao;
     @Resource
     private MusicXmlArchiveMngService musicXmlArchiveMngService;
 
     @RequestMapping
-    public String index(Model model) {
-        return "mng/music/index";
+    public String index() {
+        return "mng/xmlset/index";
     }
 
     @RequestMapping("/list")
     @ResponseBody
     public LayuiTableRv<?> dataList(int page, int limit, String searchParams) {
-        MusicXmlArchive param = JacksonUtils.jsonToType(searchParams, new TypeReference<MusicXmlArchive>() {});
-        Page<MusicXmlArchive> pageData;
+        XmlSet param = JacksonUtils.jsonToType(searchParams, new TypeReference<XmlSet>() {});
+        Page<XmlSet> pageData;
         if (param == null || StringUtils.isEmpty(param.getName())){
-            pageData = archiveDao.findAll(PageRequest.of(page - 1, limit));
+            pageData = xmlSetDao.findAll(PageRequest.of(page - 1, limit));
         }else {
-            pageData = archiveDao.findAllByNameContains(param.getName(), PageRequest.of(page - 1, limit));
+            pageData = xmlSetDao.findAllByNameContains(param.getName(), PageRequest.of(page - 1, limit));
         }
         return LayuiTableRv.ok(pageData.getContent(), pageData.getTotalPages());
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addView() {
-        return "mng/music/add";
+        return "mng/xmlset/add";
     }
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData<?> addPost(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) {
+    public ResponseData<?> addPost(XmlSet desc, MultipartFile mainPicFile) {
         try {
-            musicXmlArchiveMngService.saveWithFile(desc, mainPicFile, xmlFile);
+            musicXmlArchiveMngService.saveSetWithFile(desc, mainPicFile);
             return new ResponseData<>(true, null, 0);
         } catch (IOException e) {
             return new ResponseData<>(false, "文件转储失败！" + e.getMessage(), -1);
@@ -70,14 +69,13 @@ public class MusicXmlMngController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editView(String id, Model model) {
-        model.addAttribute("model", archiveDao.findById(id));
-        model.addAttribute("auditStateList", AuditState.values());
-        return "mng/music/edit";
+        model.addAttribute("model", xmlSetDao.findById(id));
+        return "mng/xmlset/edit";
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData<?> edit(MusicXmlArchive desc) {
-        if (musicXmlArchiveMngService.updateInfo(desc) == null){
+    public ResponseData<?> edit(XmlSet desc) {
+        if (musicXmlArchiveMngService.updateSetInfo(desc) == null){
             return new ResponseData<>(false,"更新失败，原纪录未找到！", -1);
         }else {
             return new ResponseData<>(true, null, 0);
@@ -87,7 +85,7 @@ public class MusicXmlMngController {
     @RequestMapping("/delete")
     @ResponseBody
     public ResponseData<?> delete(String id) {
-        archiveDao.deleteById(id);
+        xmlSetDao.deleteById(id);
         return new ResponseData<>(true, null, 0);
     }
 

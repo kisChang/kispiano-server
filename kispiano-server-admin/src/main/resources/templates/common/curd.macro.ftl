@@ -108,3 +108,54 @@
         });
     </script>
 </#macro>
+
+<#macro scriptAdd>
+    <@netCommon.commonScript />
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form, layer = layui.layer, $ = layui.$;
+
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                $.ajax({
+                    url: location.href, type: 'POST', cache: false,
+                    data: new FormData(document.getElementById('form')),
+                    processData: false, contentType: false,
+                }).done(function(rv) {
+                    if (rv && rv.stat){
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(iframeIndex);
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                }).fail(function(res) {
+                    layer.alert("连接服务器失败！")
+                });
+                return false;
+            });
+
+        });
+    </script>
+</#macro>
+<#macro scriptEdit>
+    <@netCommon.commonScript />
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form, layer = layui.layer, $ = layui.$;
+            //监听提交
+            form.on('submit(saveBtn)', function (data) {
+                $.post(location.href, data.field, function (rv) {
+                    if (rv && rv.stat){
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(iframeIndex);
+                    }else {
+                        layer.alert(data.msg);
+                    }
+                }).error(function () {
+                    layer.alert("连接服务器失败！")
+                })
+                return false;
+            });
+        });
+    </script>
+</#macro>

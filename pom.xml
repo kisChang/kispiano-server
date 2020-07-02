@@ -48,8 +48,8 @@
                 <conf.savepath.pic>/root/www/pic</conf.savepath.pic>
                 <conf.savepath.xml>/root/www/xml</conf.savepath.xml>
                 <conf.db.database>kispiano</conf.db.database>
-                <conf.db.username>root</conf.db.username>
-                <conf.db.password>root</conf.db.password>
+                <conf.db.username>kis</conf.db.username>
+                <conf.db.password>123456</conf.db.password>
             </properties>
         </profile>
     </profiles>

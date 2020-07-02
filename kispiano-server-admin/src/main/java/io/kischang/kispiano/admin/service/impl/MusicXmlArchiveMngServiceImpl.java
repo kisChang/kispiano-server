@@ -4,7 +4,9 @@ import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
 import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.enums.FileTypeEnum;
 import io.kischang.kispiano.model.MusicXmlArchive;
+import io.kischang.kispiano.model.XmlSet;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
+import io.kischang.kispiano.service.dao.XmlSetDao;
 import io.kischang.kispiano.utils.DateFormatUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,11 +40,14 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
 
     @Resource
     private MusicXmlArchiveDao dao;
+    @Resource
+    private XmlSetDao xmlSetDao;
 
     @Override
     @Transactional(rollbackOn = {IOException.class})
     public MusicXmlArchive saveWithFile(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException {
         //预存储
+        desc.setLastUpdate(DateFormatUtils.formatDatetime());
         desc = dao.save(desc);
         String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
         //处理图片
@@ -92,6 +97,44 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
 
             old.setLastUpdate(DateFormatUtils.formatDatetime());
             return dao.save(old);
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackOn = {IOException.class})
+    public XmlSet saveSetWithFile(XmlSet desc, MultipartFile mainPicFile) throws IOException {
+        //预存储
+        desc.setLastUpdate(DateFormatUtils.formatDatetime());
+        desc = xmlSetDao.save(desc);
+        String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
+
+        //处理图片
+        String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
+                .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
+        String picName = "set_" + desc.getId() + picType;
+        Path picSp = Paths.get(picSavePath, preffix, picName);
+        checkPath(picSp.toFile().getParentFile());
+        try (OutputStream out = new FileOutputStream(picSp.toFile())) {
+            IOUtils.write(mainPicFile.getBytes(), out);
+        }
+
+        //更新
+        desc.setMainPic(preffix + "/" + picName);
+        desc = xmlSetDao.save(desc);
+
+        return desc;
+    }
+
+    @Override
+    public XmlSet updateSetInfo(XmlSet desc) {
+        Optional<XmlSet> opt = xmlSetDao.findById(desc.getId());
+        if (opt.isPresent()){
+            XmlSet old = opt.get();
+            old.setName(desc.getName());
+            old.setDescText(desc.getDescText());
+            old.setLastUpdate(DateFormatUtils.formatDatetime());
+            return xmlSetDao.save(old);
         }
         return null;
     }
