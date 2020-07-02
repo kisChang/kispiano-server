@@ -14,6 +14,12 @@
     </modules>
     <packaging>pom</packaging>
 
+    <description>
+        <!--构建前端-->
+        -P vps clean package -pl kispiano-server-front -am
+
+    </description>
+
     <properties>
         <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
         <mysql-connector.version>5.1.49</mysql-connector.version>
@@ -21,8 +27,8 @@
         <kis.version>0.3.31-SNAPSHOT</kis.version>
 
         <!--配置参数-->
-        <conf.front.port>8080</conf.front.port>
-        <conf.admin.port>8081</conf.admin.port>
+        <conf.front.port>10080</conf.front.port>
+        <conf.admin.port>10081</conf.admin.port>
         <conf.savepath.pic>E:\\mnt\\www\\pic</conf.savepath.pic>
         <conf.savepath.xml>E:\\mnt\\www\\xml</conf.savepath.xml>
         <conf.db.database>kispiano</conf.db.database>
@@ -37,8 +43,10 @@
 
     <profiles>
         <profile>
-            <id>aliyun</id>
+            <id>vps</id>
             <properties>
+                <conf.savepath.pic>/root/www/pic</conf.savepath.pic>
+                <conf.savepath.xml>/root/www/xml</conf.savepath.xml>
                 <conf.db.database>kispiano</conf.db.database>
                 <conf.db.username>root</conf.db.username>
                 <conf.db.password>root</conf.db.password>
@@ -75,28 +83,13 @@
             </resource>
         </resources>
 
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <fork>true</fork>
-                    <executable>true</executable>
-                </configuration>
-            </plugin>
-        </plugins>
-
-
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
