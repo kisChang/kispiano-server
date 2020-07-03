@@ -32,6 +32,6 @@
         {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
     ]];
 </script>
-<@curd.tableScript "/xmlset"></@curd.tableScript>
+<@curd.tableScript "/musicxml"></@curd.tableScript>
 </body>
 </html>

@@ -90,11 +90,11 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
         Optional<MusicXmlArchive> opt = dao.findById(desc.getId());
         if (opt.isPresent()){
             MusicXmlArchive old = opt.get();
+            old.setXmlsetId(desc.getXmlsetId());
             old.setName(desc.getName());
             old.setDescText(desc.getDescText());
             old.setScore(desc.getScore());
             old.setAuditState(desc.getAuditState());
-
             old.setLastUpdate(DateFormatUtils.formatDatetime());
             return dao.save(old);
         }

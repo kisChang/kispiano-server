@@ -52,6 +52,6 @@ public class MusicXmlArchive implements java.io.Serializable {
     private String savePath;
 
     //所属集合ID
-    private String setId;
+    private String xmlsetId;
 
 }

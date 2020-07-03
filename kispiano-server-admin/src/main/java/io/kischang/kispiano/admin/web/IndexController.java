@@ -39,7 +39,7 @@ public class IndexController {
         if (tmp == null){
             LayuiInitConfig initConfig = new LayuiInitConfig();
             initConfig.setHomeInfo(LayuiMenuInfo.mkHome("首页", "/welcome"));
-            initConfig.setLogoInfo(LayuiMenuInfo.mkLogo("KIS", "/static/img/logo_mini.png", ""));
+            initConfig.setLogoInfo(LayuiMenuInfo.mkLogo("KisPiano", "/static/img/logo_mini.png", ""));
             List<LayuiMenuInfo> menuInfo = new LinkedList<>();
             initConfig.setMenuInfo(menuInfo);
             menuInfo.add(LayuiMenuInfo.mkMenu("资源管理", "fa fa-address-book", "/musicxml"));
@@ -64,7 +64,7 @@ public class IndexController {
     @RequestMapping("/welcome")
     @ResponseBody
     public String welcome(){
-        return "Hello World!";
+        return "<h5 style='margin: 9%;text-align: center;'>Hello World!</h5>";
     }
 
 }

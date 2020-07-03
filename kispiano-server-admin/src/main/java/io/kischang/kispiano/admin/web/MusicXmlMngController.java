@@ -8,6 +8,7 @@ import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
 import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
+import io.kischang.kispiano.service.dao.XmlSetDao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,8 @@ public class MusicXmlMngController {
     @Resource
     private MusicXmlArchiveDao archiveDao;
     @Resource
+    private XmlSetDao xmlSetDao;
+    @Resource
     private MusicXmlArchiveMngService musicXmlArchiveMngService;
 
     @RequestMapping
@@ -53,7 +56,8 @@ public class MusicXmlMngController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addView() {
+    public String addView(Model model) {
+        model.addAttribute("setList", xmlSetDao.findAll());
         return "mng/music/add";
     }
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -72,6 +76,7 @@ public class MusicXmlMngController {
     public String editView(String id, Model model) {
         model.addAttribute("model", archiveDao.findById(id));
         model.addAttribute("auditStateList", AuditState.values());
+        model.addAttribute("setList", xmlSetDao.findAll());
         return "mng/music/edit";
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)

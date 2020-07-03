@@ -27,8 +27,8 @@
         <kis.version>0.3.31-SNAPSHOT</kis.version>
 
         <!--配置参数-->
-        <conf.front.port>10080</conf.front.port>
-        <conf.admin.port>10081</conf.admin.port>
+        <conf.front.port>10071</conf.front.port>
+        <conf.admin.port>9090</conf.admin.port>
         <conf.savepath.pic>E:\\mnt\\www\\pic</conf.savepath.pic>
         <conf.savepath.xml>E:\\mnt\\www\\xml</conf.savepath.xml>
         <conf.db.database>kispiano</conf.db.database>

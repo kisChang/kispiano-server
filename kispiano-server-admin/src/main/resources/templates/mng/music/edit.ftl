@@ -11,6 +11,7 @@
     <p>数据未找到！</p>
 </#if>
 <#if model.isPresent()>
+    <#assign mod = model.get()>
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
             <label class="layui-form-label required">名称</label>
@@ -34,6 +35,17 @@
             <label class="layui-form-label">评分</label>
             <div class="layui-input-block">
                 <input type="number" name="score" value="${model.get().score!}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属集合</label>
+            <div class="layui-input-block">
+                <select name="xmlsetId" class="layui-input">
+                    <option value="" >暂无</option>
+                    <#list setList as itm>
+                        <option value="${itm.id}" ${ (itm.id == mod.xmlsetId!'' )?string('selected', '')}>${itm.name}</option>
+                    </#list>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
