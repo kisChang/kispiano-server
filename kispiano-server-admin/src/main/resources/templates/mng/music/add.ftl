@@ -12,13 +12,25 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
+                <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input" autocomplete="off">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">主图</label>
             <div class="layui-input-block">
                 <input type="file" name="mainPicFile" placeholder="主图" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主文件类型</label>
+            <div class="layui-input-block">
+                <input type="checkbox" checked="" name="xmlType" value="true" lay-skin="switch" lay-filter="switchTest" lay-text="单文件|zip压缩包">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主文件</label>
+            <div class="layui-input-block">
+                <input type="file" name="xmlFile" placeholder="主文件" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">

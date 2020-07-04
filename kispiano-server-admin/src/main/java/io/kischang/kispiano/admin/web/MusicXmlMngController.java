@@ -62,9 +62,9 @@ public class MusicXmlMngController {
     }
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseData<?> addPost(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) {
+    public ResponseData<?> addPost(MusicXmlArchive desc, Boolean xmlType, MultipartFile mainPicFile, MultipartFile xmlFile) {
         try {
-            musicXmlArchiveMngService.saveWithFile(desc, mainPicFile, xmlFile);
+            musicXmlArchiveMngService.saveWithFile(desc, xmlType == null ? false : xmlType, mainPicFile, xmlFile);
             return new ResponseData<>(true, null, 0);
         } catch (IOException e) {
             return new ResponseData<>(false, "文件转储失败！" + e.getMessage(), -1);

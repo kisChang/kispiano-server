@@ -53,5 +53,7 @@ public class MusicXmlArchive implements java.io.Serializable {
 
     //所属集合ID
     private String xmlsetId;
+    @ColumnDefault("0")
+    private boolean shown;
 
 }

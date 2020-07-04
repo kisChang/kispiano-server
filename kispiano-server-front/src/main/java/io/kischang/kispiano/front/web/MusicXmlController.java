@@ -32,16 +32,21 @@ public class MusicXmlController {
     public static class SearchPage implements java.io.Serializable {
         private String name;
         private int page;
+        private Integer pageSize;
+
+        public int getSize(){
+            return pageSize == null ? 10 : pageSize;
+        }
     }
     @RequestMapping("/search")
     @ResponseBody
     public Page<?> searchByName(@RequestBody SearchPage searchPage) {
         if (searchPage.name != null){
             return archiveDao.findAllByNameContainsAndAuditStateEqualsOrderByScoreDesc(
-                    searchPage.name, AuditState.Pass, PageRequest.of(searchPage.page, 10));
+                    searchPage.name, AuditState.Pass, PageRequest.of(searchPage.page, searchPage.getSize()));
         }else {
             return archiveDao.findAllByAuditStateEqualsOrderByScoreDesc(
-                     AuditState.Pass, PageRequest.of(searchPage.page, 10));
+                     AuditState.Pass, PageRequest.of(searchPage.page, searchPage.getSize()));
         }
     }
 

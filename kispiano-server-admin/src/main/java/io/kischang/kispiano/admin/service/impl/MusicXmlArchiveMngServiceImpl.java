@@ -1,5 +1,6 @@
 package io.kischang.kispiano.admin.service.impl;
 
+import com.kischang.simple_utils.utils.ZipUtilApache;
 import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
 import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.enums.FileTypeEnum;
@@ -45,38 +46,75 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
 
     @Override
     @Transactional(rollbackOn = {IOException.class})
-    public MusicXmlArchive saveWithFile(MusicXmlArchive desc, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException {
-        //预存储
-        desc.setLastUpdate(DateFormatUtils.formatDatetime());
-        desc = dao.save(desc);
+    public void saveWithFile(MusicXmlArchive desc, boolean xmlType, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException {
         String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
-        //处理图片
-        String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
-                .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
-        String picName = desc.getId() + picType;
-        Path picSp = Paths.get(picSavePath, preffix, picName);
-        checkPath(picSp.toFile().getParentFile());
-        try (OutputStream out = new FileOutputStream(picSp.toFile())) {
-            IOUtils.write(mainPicFile.getBytes(), out);
+        if (xmlType){
+            //单文件
+            desc.setLastUpdate(DateFormatUtils.formatDatetime());//预存储
+            desc = dao.save(desc);
+            //处理图片
+            String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
+                    .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
+            String picName = desc.getId() + picType;
+            Path picSp = Paths.get(picSavePath, preffix, picName);
+            checkPath(picSp.toFile().getParentFile());
+            try (OutputStream out = new FileOutputStream(picSp.toFile())) {
+                IOUtils.write(mainPicFile.getBytes(), out);
+            }
+            //处理文件
+            String xmlName = desc.getId() + ".xml";
+            Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
+            checkPath(xmlSp.toFile().getParentFile());
+            try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
+                IOUtils.write(xmlFile.getBytes(), out);
+            }
+
+            //更新
+            desc.setLastUpdate(DateFormatUtils.formatDatetime());
+            desc.setMainPic(preffix + "/" + picName);
+            desc.setSavePath(preffix + "/" + xmlName);
+            desc.setFileType(FileTypeEnum.LOCAL);
+
+            desc.setAuditState(AuditState.Wait);
+            desc = dao.save(desc);
+        }else {   //zip压缩包多文件
+            XmlSet tmp = new XmlSet();
+            tmp.setName(desc.getName());
+            tmp.setDescText(desc.getDescText());
+            final XmlSet xmlSet = this.saveSetWithFile(tmp, mainPicFile);
+            try {
+                ZipUtilApache.unZipCoding(xmlFile.getInputStream(), "utf-8", null, (entry, inputStream) -> {
+                    String fileName = entry.getName().substring(0, entry.getName().indexOf("."));
+
+                    MusicXmlArchive onceDesc = new MusicXmlArchive();
+                    onceDesc.setName("Part " + fileName);
+                    onceDesc.setDescText(tmp.getName());
+                    onceDesc.setXmlsetId(xmlSet.getId());
+                    onceDesc.setMainPic(xmlSet.getMainPic());
+                    onceDesc.setAuditState(AuditState.Pass);
+
+                    onceDesc.setScore(100);
+                    onceDesc.setLastUpdate(DateFormatUtils.formatDatetime());//预存储
+                    onceDesc.setShown(false);
+                    onceDesc = dao.save(onceDesc);
+
+                    //处理文件
+                    String xmlName = onceDesc.getId() + ".xml";
+                    Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
+                    checkPath(xmlSp.toFile().getParentFile());
+                    try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
+                        IOUtils.copy(inputStream, out);
+                    }
+                    //更新
+                    onceDesc.setLastUpdate(DateFormatUtils.formatDatetime());
+                    onceDesc.setSavePath(preffix + "/" + xmlName);
+                    onceDesc = dao.save(onceDesc);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new IOException("转储失败：" + e.getMessage());
+            }
         }
-        //处理文件
-        String xmlName = desc.getId() + ".xml";
-        Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
-        checkPath(xmlSp.toFile().getParentFile());
-        try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
-            IOUtils.write(xmlFile.getBytes(), out);
-        }
-
-        //更新
-        desc.setLastUpdate(DateFormatUtils.formatDatetime());
-        desc.setMainPic(preffix + "/" + picName);
-        desc.setSavePath(preffix + "/" + xmlName);
-        desc.setFileType(FileTypeEnum.LOCAL);
-
-        desc.setAuditState(AuditState.Wait);
-        desc = dao.save(desc);
-
-        return desc;
     }
 
     private void checkPath(File pathFile) {
