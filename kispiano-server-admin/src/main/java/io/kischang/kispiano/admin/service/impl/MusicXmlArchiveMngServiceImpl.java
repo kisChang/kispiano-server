@@ -144,6 +144,7 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
     public XmlSet saveSetWithFile(XmlSet desc, MultipartFile mainPicFile) throws IOException {
         //预存储
         desc.setLastUpdate(DateFormatUtils.formatDatetime());
+        desc.setAuditState(AuditState.Wait);
         desc = xmlSetDao.save(desc);
         String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
 
@@ -171,6 +172,7 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
             XmlSet old = opt.get();
             old.setName(desc.getName());
             old.setDescText(desc.getDescText());
+            old.setAuditState(desc.getAuditState());
             old.setLastUpdate(DateFormatUtils.formatDatetime());
             return xmlSetDao.save(old);
         }

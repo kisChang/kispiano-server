@@ -1,6 +1,7 @@
 package io.kischang.kispiano.model;
 
 import com.kischang.simple_utils.hibernate.ig.HibUUIDGenerator;
+import io.kischang.kispiano.enums.AuditState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,8 @@ public class XmlSet implements java.io.Serializable {
     private String descText;
     private String mainPic;
     private String lastUpdate;
+
+    //审核状态
+    private AuditState auditState;
 
 }

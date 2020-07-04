@@ -5,6 +5,7 @@ import com.kischang.simple_utils.formbean.ResponseData;
 import com.kischang.simple_utils.utils.JacksonUtils;
 import io.kischang.kispiano.admin.formbean.LayuiTableRv;
 import io.kischang.kispiano.admin.service.MusicXmlArchiveMngService;
+import io.kischang.kispiano.enums.AuditState;
 import io.kischang.kispiano.model.XmlSet;
 import io.kischang.kispiano.service.dao.XmlSetDao;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,7 @@ public class XmlSetMngController {
         }else {
             pageData = xmlSetDao.findAllByNameContains(param.getName(), PageRequest.of(page - 1, limit));
         }
-        return LayuiTableRv.ok(pageData.getContent(), pageData.getTotalPages());
+        return LayuiTableRv.ok(pageData);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -70,6 +71,7 @@ public class XmlSetMngController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String editView(String id, Model model) {
         model.addAttribute("model", xmlSetDao.findById(id));
+        model.addAttribute("auditStateList", AuditState.values());
         return "mng/xmlset/edit";
     }
     @RequestMapping(value = "/edit", method = RequestMethod.POST)

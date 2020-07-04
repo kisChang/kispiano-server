@@ -24,6 +24,16 @@
                 <input type="text" value="${model.get().mainPic!}" class="layui-input" readonly>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核状态</label>
+            <div class="layui-input-block">
+                <select name="auditState" class="layui-input">
+                    <#list auditStateList as x>
+                        <option value="${x.value}" ${ (model.get().auditState.value == x.value)?string('selected', '') }>${x.getName()}</option>
+                    </#list>
+                </select>
+            </div>
+        </div>
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">描述信息</label>
             <div class="layui-input-block">

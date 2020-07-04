@@ -52,7 +52,7 @@ public class MusicXmlMngController {
         }else {
             pageData = archiveDao.findAllByNameContains(param.getName(), PageRequest.of(page - 1, limit));
         }
-        return LayuiTableRv.ok(pageData.getContent(), pageData.getTotalPages());
+        return LayuiTableRv.ok(pageData);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)

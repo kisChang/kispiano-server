@@ -4,6 +4,7 @@ import com.kischang.simple_utils.formbean.ResponseData;
 import com.kischang.simple_utils.page.PageInfo;
 import com.kischang.simple_utils.web.bind.annotation.ReqPageInfo;
 import io.kischang.kispiano.enums.AuditState;
+import io.kischang.kispiano.front.qo.SearchPage;
 import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
 import lombok.Data;
@@ -28,26 +29,21 @@ public class MusicXmlController {
     @Resource
     private MusicXmlArchiveDao archiveDao;
 
-    @Data
-    public static class SearchPage implements java.io.Serializable {
-        private String name;
-        private int page;
-        private Integer pageSize;
-
-        public int getSize(){
-            return pageSize == null ? 10 : pageSize;
-        }
-    }
     @RequestMapping("/search")
     @ResponseBody
     public Page<?> searchByName(@RequestBody SearchPage searchPage) {
-        if (searchPage.name != null){
-            return archiveDao.findAllByNameContainsAndAuditStateEqualsOrderByScoreDesc(
-                    searchPage.name, AuditState.Pass, PageRequest.of(searchPage.page, searchPage.getSize()));
+        if (searchPage.getName() != null){
+            return archiveDao.findAllByNameContainsAndAuditStateEqualsAndShownEqualsOrderByScoreDesc(
+                    searchPage.getName(), AuditState.Pass, true, searchPage.toPage());
         }else {
-            return archiveDao.findAllByAuditStateEqualsOrderByScoreDesc(
-                     AuditState.Pass, PageRequest.of(searchPage.page, searchPage.getSize()));
+            return archiveDao.findAllByAuditStateEqualsAndShownEqualsOrderByScoreDesc(
+                     AuditState.Pass, true, searchPage.toPage());
         }
+    }
+    @RequestMapping("/list")
+    @ResponseBody
+    public Page<?> listById(@RequestBody SearchPage searchPage) {
+        return archiveDao.findAllByXmlsetIdEqualsOrderByName(searchPage.getName(), searchPage.toPage());
     }
 
 }
