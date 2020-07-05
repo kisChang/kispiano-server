@@ -33,10 +33,10 @@ public class MusicXmlController {
     @ResponseBody
     public Page<?> searchByName(@RequestBody SearchPage searchPage) {
         if (searchPage.getName() != null){
-            return archiveDao.findAllByNameContainsAndAuditStateEqualsAndShownEqualsOrderByScoreDesc(
+            return archiveDao.findAllByNameContainsAndAuditStateEqualsAndShownEqualsOrderByLastUpdateDesc(
                     searchPage.getName(), AuditState.Pass, true, searchPage.toPage());
         }else {
-            return archiveDao.findAllByAuditStateEqualsAndShownEqualsOrderByScoreDesc(
+            return archiveDao.findAllByAuditStateEqualsAndShownEqualsOrderByLastUpdateDesc(
                      AuditState.Pass, true, searchPage.toPage());
         }
     }

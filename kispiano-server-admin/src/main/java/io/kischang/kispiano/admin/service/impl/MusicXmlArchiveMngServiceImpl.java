@@ -50,6 +50,7 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
         String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
         if (xmlType){
             //单文件
+            desc.setShown(true);
             desc.setLastUpdate(DateFormatUtils.formatDatetime());//预存储
             desc = dao.save(desc);
             //处理图片
