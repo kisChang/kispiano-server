@@ -16,9 +16,21 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">主图类型</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="mainPicType" value="false" lay-skin="switch" lay-filter="switchTest" lay-text="选择系统图|上传文件">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">主图</label>
             <div class="layui-input-block">
-                <input type="file" name="mainPicFile" placeholder="主图" class="layui-input">
+                <input type="file" name="mainPicFile" placeholder="上传主图" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">主图选择</label>
+            <div class="layui-input-block">
+                <input type="text" name="mainPic" placeholder="主图选择" class="layui-input" autocomplete="off" value="unkown.png">
             </div>
         </div>
         <div class="layui-form-item">

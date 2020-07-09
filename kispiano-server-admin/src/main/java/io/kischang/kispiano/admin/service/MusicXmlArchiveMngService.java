@@ -12,7 +12,9 @@ import java.io.IOException;
  */
 public interface MusicXmlArchiveMngService {
 
-    void saveWithFile(MusicXmlArchive desc, boolean xmlType, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException;
+    void saveWithFile(MusicXmlArchive desc
+            , boolean mainPicType, MultipartFile mainPicFile
+            , boolean xmlType, MultipartFile xmlFile) throws IOException;
 
     MusicXmlArchive updateInfo(MusicXmlArchive desc);
 

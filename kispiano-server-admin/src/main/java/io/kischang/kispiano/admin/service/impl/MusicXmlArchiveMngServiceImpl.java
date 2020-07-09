@@ -46,21 +46,29 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
 
     @Override
     @Transactional(rollbackOn = {IOException.class})
-    public void saveWithFile(MusicXmlArchive desc, boolean xmlType, MultipartFile mainPicFile, MultipartFile xmlFile) throws IOException {
+    public void saveWithFile(MusicXmlArchive desc, boolean mainPicType, MultipartFile mainPicFile, boolean xmlType, MultipartFile xmlFile) throws IOException {
         String preffix = new SimpleDateFormat("yyMMdd").format(new Date());
         if (xmlType){
             //单文件
             desc.setShown(true);
             desc.setLastUpdate(DateFormatUtils.formatDatetime());//预存储
             desc = dao.save(desc);
+
             //处理图片
-            String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
-                    .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
-            String picName = desc.getId() + picType;
-            Path picSp = Paths.get(picSavePath, preffix, picName);
-            checkPath(picSp.toFile().getParentFile());
-            try (OutputStream out = new FileOutputStream(picSp.toFile())) {
-                IOUtils.write(mainPicFile.getBytes(), out);
+            if (mainPicType){
+                //上传图片
+                String picType = Objects.requireNonNull(mainPicFile.getOriginalFilename())
+                        .substring(mainPicFile.getOriginalFilename().lastIndexOf("."));
+                String picName = desc.getId() + picType;
+                Path picSp = Paths.get(picSavePath, preffix, picName);
+                checkPath(picSp.toFile().getParentFile());
+                try (OutputStream out = new FileOutputStream(picSp.toFile())) {
+                    IOUtils.write(mainPicFile.getBytes(), out);
+                }
+
+                desc.setMainPic(preffix + "/" + picName);
+            }else {
+                //选用自带文件
             }
             //处理文件
             String xmlName = desc.getId() + ".xml";
@@ -72,7 +80,6 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
 
             //更新
             desc.setLastUpdate(DateFormatUtils.formatDatetime());
-            desc.setMainPic(preffix + "/" + picName);
             desc.setSavePath(preffix + "/" + xmlName);
             desc.setFileType(FileTypeEnum.LOCAL);
 

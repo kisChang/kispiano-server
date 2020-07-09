@@ -39,7 +39,8 @@ public class IndexController {
         if (tmp == null){
             LayuiInitConfig initConfig = new LayuiInitConfig();
             initConfig.setHomeInfo(LayuiMenuInfo.mkHome("首页", "/welcome"));
-            initConfig.setLogoInfo(LayuiMenuInfo.mkLogo("KisPiano", "/static/img/logo_mini.png", ""));
+//            initConfig.setLogoInfo(LayuiMenuInfo.mkLogo("KisPiano", "/static/img/logo_mini.png", ""));
+            initConfig.setLogoInfo(LayuiMenuInfo.mkLogo("123", "", ""));
             List<LayuiMenuInfo> menuInfo = new LinkedList<>();
             initConfig.setMenuInfo(menuInfo);
             menuInfo.add(LayuiMenuInfo.mkMenu("资源管理", "fa fa-address-book", "/musicxml"));
