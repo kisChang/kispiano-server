@@ -15,6 +15,12 @@
     <artifactId>kispiano-server-util</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.66</version>
+        </dependency>
+
         <!--jpa-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
