@@ -1,7 +1,7 @@
 package io.kischang.kispiano;
 
-import io.kischang.kispiano.utils.AESUtils;
 import io.kischang.kispiano.utils.CompressUtils;
+import io.kischang.kispiano.utils.CryptUtil;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.util.Base64Utils;
@@ -47,7 +47,7 @@ public class CrypSpecTest {
         //1. 读取二进制
         String fileContent = IOUtils.toString(new FileInputStream(once), StandardCharsets.UTF_8);
         //2. 加密数据
-        byte[] cryData = AESUtils.encrypt(fileContent.getBytes(), Constant.AESKEY);
+        byte[] cryData = CryptUtil.encrypt(fileContent.getBytes());
         //3. 压缩数据
         byte[] gzData = compressUtils.compression(cryData);
         //4. 存储
@@ -71,11 +71,22 @@ public class CrypSpecTest {
 
     @Test
     public void testDeEncrypt() throws Exception {
-        String sourceStr = "HelloWorld";
-        //加密\解密
-        byte[] enData = AESUtils.encrypt(sourceStr.getBytes(), Constant.AESKEY);
-        byte[] rvData = AESUtils.decrypt(enData, Constant.AESKEY);
-        System.out.println(">>>>" + new String(rvData));
+        byte[] key256 = Constant.AES_KEY;
+        //iv.length须满足16的整数倍
+        byte[] iv = Constant.AES_IV;
+
+        String content_str = "helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好helloworld 你好";
+        byte[] contentbytes = content_str.getBytes(StandardCharsets.UTF_8);
+
+        //ecb256 bytes
+        byte[] encryptbytes = CryptUtil.aesEncryptToECB(contentbytes, key256);
+        byte[] decryptbytes = CryptUtil.aesDecryptToECB(encryptbytes, key256);
+        System.out.println(new String(decryptbytes, StandardCharsets.UTF_8));
+
+        //cbc256 bytes
+        encryptbytes = CryptUtil.aesEncryptToCBC(contentbytes, key256, iv);
+        decryptbytes = CryptUtil.aesDecryptToCBC(encryptbytes, key256, iv);
+        System.out.println(new String(decryptbytes, StandardCharsets.UTF_8));
     }
 
 
