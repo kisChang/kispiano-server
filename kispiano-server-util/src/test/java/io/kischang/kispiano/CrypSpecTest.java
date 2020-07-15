@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author KisChang
@@ -37,6 +38,7 @@ public class CrypSpecTest {
         System.out.println(Base64Utils.encodeToString(sd));
         //2. 解密
         sd = CryptUtil.decrypt(sd);
+        System.out.println("dec Data >>" + sd.length);
         System.out.println(new String(sd, StandardCharsets.UTF_8).substring(0, 100));
     }
 
@@ -49,7 +51,7 @@ public class CrypSpecTest {
 //        parseXml(new File("C:\\Users\\KisChang\\Desktop\\xml\\200701\\5e311081fe9d4eebb64bf87312ffd340.xml"));
     }
     private void listFile(File pathSource) throws Exception {
-        for (File once : pathSource.listFiles()){
+        for (File once : Objects.requireNonNull(pathSource.listFiles())){
             if (once.isDirectory()){
                 listFile(once);
             }else {
