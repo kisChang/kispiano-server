@@ -21,6 +21,25 @@ import java.nio.charset.StandardCharsets;
 public class CrypSpecTest {
     public static File pathSource = new File("C:\\Users\\KisChang\\Desktop\\xml\\");
     public static String pathTarget = "C:\\Users\\KisChang\\Desktop\\xmltar\\";
+
+    /**
+     * 反向解密xml */
+    @Test
+    public void testDecodeXml() throws Exception {
+        File file = new File("C:\\Users\\KisChang\\Desktop\\xmltar\\200709\\05e017f06d4c48c286e608b516dbe006.xml");
+        String sourceData = IOUtils.toString(new FileInputStream(file), StandardCharsets.UTF_8);
+        System.out.println("sourceData ");
+        System.out.println(sourceData);
+        //1. gunzip
+        byte[] sd = new CompressUtils(CompressUtils.CompressType.GZIP)
+                .decompression(Base64Utils.decodeFromString(sourceData));
+        System.out.println("unz Data >>" + sd.length);
+        System.out.println(Base64Utils.encodeToString(sd));
+        //2. 解密
+        sd = CryptUtil.decrypt(sd);
+        System.out.println(new String(sd, StandardCharsets.UTF_8).substring(0, 100));
+    }
+
     /**
      * 输入XML文件原文档，进行加密和压缩并存储同名文件到目标目录
      */
