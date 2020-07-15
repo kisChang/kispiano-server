@@ -8,6 +8,8 @@ import io.kischang.kispiano.model.MusicXmlArchive;
 import io.kischang.kispiano.model.XmlSet;
 import io.kischang.kispiano.service.dao.MusicXmlArchiveDao;
 import io.kischang.kispiano.service.dao.XmlSetDao;
+import io.kischang.kispiano.utils.CompressUtils;
+import io.kischang.kispiano.utils.CryptUtil;
 import io.kischang.kispiano.utils.DateFormatUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -74,9 +73,8 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
             String xmlName = desc.getId() + ".xml";
             Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
             checkPath(xmlSp.toFile().getParentFile());
-            try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
-                IOUtils.write(xmlFile.getBytes(), out);
-            }
+            //写入文件
+            this.writeXmlToFile(xmlFile.getInputStream(), xmlSp.toFile());
 
             //更新
             desc.setLastUpdate(DateFormatUtils.formatDatetime());
@@ -110,9 +108,8 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
                     String xmlName = onceDesc.getId() + ".xml";
                     Path xmlSp = Paths.get(xmlSavePath, preffix, xmlName);
                     checkPath(xmlSp.toFile().getParentFile());
-                    try (OutputStream out = new FileOutputStream(xmlSp.toFile())) {
-                        IOUtils.copy(inputStream, out);
-                    }
+                    //写入文件
+                    this.writeXmlToFile(inputStream, xmlSp.toFile());
                     //更新
                     onceDesc.setLastUpdate(DateFormatUtils.formatDatetime());
                     onceDesc.setSavePath(preffix + "/" + xmlName);
@@ -122,6 +119,20 @@ public class MusicXmlArchiveMngServiceImpl implements MusicXmlArchiveMngService 
                 e.printStackTrace();
                 throw new IOException("转储失败：" + e.getMessage());
             }
+        }
+    }
+
+    private void writeXmlToFile(InputStream inputStream, File toFile) throws IOException {
+        try (OutputStream out = new FileOutputStream(toFile)) {
+            byte[] xmlData = IOUtils.toByteArray(inputStream);
+            //1. 加密
+            byte[] cryData = CryptUtil.encrypt(xmlData);
+            //2. 压缩数据
+            byte[] gzData = new CompressUtils(CompressUtils.CompressType.GZIP).compression(cryData);
+            //3. 写入文件
+            IOUtils.write(gzData, out);
+        } catch (Exception e) {
+            throw new IOException("数据加密压缩异常", e);
         }
     }
 
